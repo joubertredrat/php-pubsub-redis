@@ -1,0 +1,35 @@
+version: "3.6"
+
+services:
+  redis-server:
+    image: "redis:6.0.5"
+    ports:
+      - "26379:6379"
+  php-subscriber:
+    build:
+      context: ./
+      dockerfile: docker/php-subscriber/Dockerfile
+    depends_on:
+      - redis-server
+    volumes:
+      - ./:/var/www
+  redis-subscriber:
+    build:
+      context: ./
+      dockerfile: docker/redis-subscriber/Dockerfile
+    depends_on:
+      - redis-server
+  telnet-subscriber:
+    build:
+      context: ./
+      dockerfile: docker/telnet-subscriber/Dockerfile
+    depends_on:
+      - redis-server
+  php-publisher:
+    build:
+      context: ./
+      dockerfile: docker/php-publisher/Dockerfile
+    depends_on:
+      - redis-server
+    volumes:
+      - ./:/var/www
